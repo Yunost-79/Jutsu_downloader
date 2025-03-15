@@ -4,30 +4,25 @@ Anime Downloader is an asynchronous script for downloading anime from the https:
 
 ## Installation
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-username/your-repository.git
-   cd your-repository
-Install the dependencies:
-
-bash
-Copy
+1. Clone the repository
+2. Install the dependencies:
+```
 pip install -r requirements.txt
-Usage
-Run the script:
-
-bash
-Copy
+```
+## Usage
+1. Run the script:
+```
 python main.py
-Enter the link to the anime from the jut.su website. For example:
-
-Copy
+```
+2. Enter the link to the anime from the jut.su website. For example:
+```
 https://jut.su/fullmeetal-alchemist/
-Choose the resolution and episodes to download.
+```
+3. Choose the resolution and episodes to download.
 
 The program will start downloading and display the progress.
 
-Dependencies
+## Dependencies
 aiofiles: For asynchronous file operations.
 
 aiohttp: For asynchronous HTTP requests.
@@ -36,9 +31,9 @@ beautifulsoup4: For HTML parsing.
 
 tqdm: For displaying a progress bar.
 
-Example
-plaintext
-Copy
+## Example
+
+```
 Enter the link or name: https://jut.su/fullmeetal-alchemist/
 Anime name: fullmeetal-alchemist
 Fetched 64 episodes
@@ -53,3 +48,7 @@ Download asynchronously (2)
 Your Choice: 2
 Downloading episodes: 100%|████████████████████| 64/64 [00:30<00:00,  2.12episode/s]
 Download complete!!! Time taken: 0m/30s
+```
+
+
+
