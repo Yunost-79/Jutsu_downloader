@@ -12,7 +12,8 @@ from tqdm import tqdm as stqdm
 
 LINK = "https://jut.su"
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36"
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36",
+    "Referer": "https://jut.su/",
 }
 DIR = "anime"
 TIMEOUT = ClientTimeout(total=86400)
@@ -66,6 +67,8 @@ class JutSu:
             return final_title_name
         return self.slug
 
+
+
 class AnimeDownloader:
     def __init__(self) -> None:
         self.jutsu: Optional[JutSu] = None
@@ -78,6 +81,10 @@ class AnimeDownloader:
                 if r.status != 200:
                     print(f"Failed to download {path}. Status code: {r.status}")
                     return
+                content_type = r.headers.get("Content-Type", "")
+                if "video/mp4" not in content_type:
+                    print(f"Unexpected content type: {content_type}. Expected video/mp4.")
+                    return
                 total_size = int(r.headers.get('Content-Length', 0))
                 downloaded_size = 0
                 progress_bar = atqdm if show_percentage else stqdm
@@ -89,14 +96,20 @@ class AnimeDownloader:
                             await f.write(d) if d else None
         except Exception as e:
             print(f"Error downloading {path}: {e}")
+ 
+    @staticmethod   
+    def sanitize_filename(filename: str) -> str:
+        return re.sub(r'[<>:"/\\|?*]', "_", filename)
 
     async def get_link_and_download(self, episode: Episode, res: str, show_percentage: bool = True) -> None:
+
         if not self.jutsu:
             raise ValueError("JutSu instance not initialized")
         link = await self.jutsu.get_download_link(episode.href, res)
         if link:
-            await self.download_video(self.jutsu.client, link, f"{DIR}/{self.jutsu.slug}/{episode.season}/{episode.name}.mp4", show_percentage)
-
+            sanitized_name = self.sanitize_filename(episode.name)
+            await self.download_video(self.jutsu.client, link, f"{DIR}/{self.jutsu.slug}/{episode.season}/{sanitized_name}.mp4", show_percentage)
+    
     @staticmethod
     def print_author_ascii_art() -> None:
         author_art = r"""
